@@ -253,7 +253,7 @@ bot.action("settings_done", (ctx) => {
   ctx.editMessageText("✅ Настройки сохранены!");
 });
 
-const showSettings = (ctx) => {
+const showSettings = async (ctx) => {
   const userId = ctx.from.id;
   const state = getUserState(userId);
 
@@ -272,7 +272,21 @@ ${MARKETPLACES[state.mp].emoji} Маркетплейс: ${MARKETPLACES[state.mp]
     [Markup.button.callback("✅ Готово", "settings_done")],
   ]);
 
-  ctx.editMessageText(currentSettings, { parse_mode: "Markdown", ...keyboard });
+  // если это callbackQuery → редактируем сообщение
+  if (ctx.updateType === "callback_query") {
+    try {
+      await ctx.editMessageText(currentSettings, {
+        parse_mode: "Markdown",
+        ...keyboard,
+      });
+    } catch (e) {
+      // если не получилось — отправляем новое сообщение
+      await ctx.replyWithMarkdown(currentSettings, keyboard);
+    }
+  } else {
+    // обычное сообщение → отправляем новое
+    await ctx.replyWithMarkdown(currentSettings, keyboard);
+  }
 };
 
 // Поиск товаров
