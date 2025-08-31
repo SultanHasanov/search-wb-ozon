@@ -124,7 +124,7 @@ bot.start(async (ctx) => {
   );
   try {
     await axios.post("https://c2e30b93457050ae.mokky.dev/users-search", {
-      id: ctx.from.id,
+      id_user: ctx.from.id,
       name: ctx.from.first_name || null,
     });
     console.log(`User ${ctx.from.id} saved to mock API`);
