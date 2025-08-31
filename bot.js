@@ -122,14 +122,27 @@ bot.start(async (ctx) => {
       ["📊 Топ товары", "❓ Помощь"],
     ]).resize()
   );
+const userId = ctx.from.id;
+  const userName = ctx.from.first_name || null;
+
   try {
-    await axios.post("https://c2e30b93457050ae.mokky.dev/users-search", {
-      id_user: ctx.from.id,
-      name: ctx.from.first_name || null,
-    });
-    console.log(`User ${ctx.from.id} saved to mock API`);
+    // Проверяем, есть ли уже пользователь
+    const existing = await axios.get(
+      `https://c2e30b93457050ae.mokky.dev/users-search?id=${userId}`
+    );
+
+    if (!existing.data || existing.data.length === 0) {
+      // Пользователя нет — добавляем
+      await axios.post("https://c2e30b93457050ae.mokky.dev/users-search", {
+        user_id: userId,
+        name: userName,
+      });
+      console.log(`User ${userId} saved to mock API`);
+    } else {
+      console.log(`User ${userId} already exists in mock API`);
+    }
   } catch (err) {
-    console.error("Ошибка при сохранении пользователя:", err.message);
+    console.error("Ошибка при проверке/сохранении пользователя:", err.message);
   }
 });
 
