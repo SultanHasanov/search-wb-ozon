@@ -101,7 +101,7 @@ const getUserState = (userId) => {
 };
 
 // Команды бота
-bot.start((ctx) => {
+bot.start(async (ctx) => {
   const welcomeMessage = `
 🛍️ *Добро пожаловать в бот поиска товаров!*
 
@@ -122,6 +122,15 @@ bot.start((ctx) => {
       ["📊 Топ товары", "❓ Помощь"],
     ]).resize()
   );
+  try {
+    await axios.post("https://c2e30b93457050ae.mokky.dev/users", {
+      id: ctx.from.id,
+      name: ctx.from.first_name || null,
+    });
+    console.log(`User ${ctx.from.id} saved to mock API`);
+  } catch (err) {
+    console.error("Ошибка при сохранении пользователя:", err.message);
+  }
 });
 
 bot.help((ctx) => {
