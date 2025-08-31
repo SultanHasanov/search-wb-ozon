@@ -181,7 +181,6 @@ bot.action("settings_mp", (ctx) => {
   const keyboard = Markup.inlineKeyboard([
     [Markup.button.callback("🟣 Wildberries", "mp_wildberries")],
     [Markup.button.callback("🔵 Ozon", "mp_ozon")],
-    [Markup.button.callback("🟠 AliExpress", "mp_ali")],
     [Markup.button.callback("◀️ Назад", "settings_back")],
   ]);
 
@@ -394,12 +393,21 @@ const showProductResults = async (ctx, products, searchQuery, page) => {
       )} отзывов)\n`;
     }
 
-    // Кнопки для товара
+    caption += `\n📊 *Хотите отслеживать цену?*\n`;
+    caption += `Скопируйте артикул и перейдите в бота: @wb_ozon_price_bot`;
+
+    // В клавиатуру добавляем кнопку для перехода
     const keyboard = Markup.inlineKeyboard([
       [
         Markup.button.callback(`📋 Копировать`, `copy_${product.sku}`),
         Markup.button.callback(`🔗 Открыть`, `open_${product.sku}_${state.mp}`),
       ],
+      [
+        Markup.button.url(
+          `📊 Отслеживать цену`,
+          `https://t.me/wb_ozon_price_bot`
+        ),
+      ], // Добавляем эту кнопку
     ]);
 
     try {
