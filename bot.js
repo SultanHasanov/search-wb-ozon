@@ -212,17 +212,15 @@ bot.action("settings_period", (ctx) => {
 });
 
 // Обработчики выбора значений
-bot.action(/^mp_(.+)$/, (ctx) => {
+bot.action(/^mp_(.+)$/, async (ctx) => {
   const userId = ctx.from.id;
   const state = getUserState(userId);
   const mp = ctx.match[1];
 
   state.mp = mp;
-  ctx.answerCbQuery(`Выбран маркетплейс: ${MARKETPLACES[mp].name}`);
 
-  // Возврат к настройкам
-  ctx.scene.enter ? null : ctx.answerCbQuery();
-  return ctx.scene.enter ? null : showSettings(ctx);
+  await ctx.answerCbQuery(`Выбран маркетплейс: ${MARKETPLACES[mp].name}`);
+  return showSettings(ctx);
 });
 
 bot.action(/^type_(.+)$/, (ctx) => {
