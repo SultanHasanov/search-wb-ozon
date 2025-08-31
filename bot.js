@@ -386,15 +386,14 @@ const showProductResults = async (ctx, products, searchQuery, page) => {
     caption += `📦 Продажи: ${formatNumber(product.Sales)} шт\n`;
     caption += `💵 Цена: ${formatPrice(product.product?.real_price)}\n`;
     caption += `📋 Артикул: \`${product.sku}\`\n`;
+    caption += `\n📊 *Хотите отслеживать цену?*\n`;
+    caption += `Скопируйте артикул и перейдите в бота: @wb_ozon_price_bot`;
 
     if (product.product?.rate) {
       caption += `⭐ Рейтинг: ${product.product.rate} (${formatNumber(
         product.product.comments_count
       )} отзывов)\n`;
     }
-
-    caption += `\n📊 *Хотите отслеживать цену?*\n`;
-    caption += `Скопируйте артикул и перейдите в бота: @wb_ozon_price_bot`;
 
     // В клавиатуру добавляем кнопку для перехода
     const keyboard = Markup.inlineKeyboard([
