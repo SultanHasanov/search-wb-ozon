@@ -128,7 +128,7 @@ const userId = ctx.from.id;
   try {
     // Проверяем, есть ли уже пользователь
     const existing = await axios.get(
-      `https://c2e30b93457050ae.mokky.dev/users-search?id=${userId}`
+      `https://c2e30b93457050ae.mokky.dev/users-search?user_id=${userId}`
     );
 
     if (!existing.data || existing.data.length === 0) {
