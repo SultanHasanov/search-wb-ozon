@@ -117,12 +117,9 @@ bot.start(async (ctx) => {
 
   ctx.replyWithMarkdown(
     welcomeMessage,
-    Markup.keyboard([
-      ["🔍 Поиск товаров", "⚙️ Настройки"],
-      ["📊 Топ товары", "❓ Помощь"],
-    ]).resize()
+    Markup.keyboard([["🔍 Поиск товаров", "⚙️ Настройки"]]).resize()
   );
-const userId = ctx.from.id;
+  const userId = ctx.from.id;
   const userName = ctx.from.first_name || null;
 
   try {
