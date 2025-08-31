@@ -331,6 +331,7 @@ bot.on('text', async (ctx) => {
 });
 
 // Показ результатов поиска с изображениями
+// Показ результатов поиска с изображениями
 const showProductResults = async (ctx, products, searchQuery, page) => {
   if (!products || products.length === 0) {
     return ctx.reply('😔 Товары не найдены. Попробуйте изменить запрос или настройки.');
@@ -361,7 +362,6 @@ const showProductResults = async (ctx, products, searchQuery, page) => {
       caption += `⭐ Рейтинг: ${product.product.rate} (${formatNumber(product.product.comments_count)} отзывов)\n`;
     }
 
-    // Кнопки для товара
     const keyboard = Markup.inlineKeyboard([
       [
         Markup.button.callback(`📋 Копировать`, `copy_${product.sku}`),
@@ -371,25 +371,19 @@ const showProductResults = async (ctx, products, searchQuery, page) => {
 
     try {
       if (product.product?.image) {
-        // Отправляем изображение с подписью
         await ctx.replyWithPhoto(product.product.image, {
           caption: caption,
           parse_mode: 'Markdown',
           ...keyboard
         });
       } else {
-        // Если изображения нет, отправляем только текст
         await ctx.replyWithMarkdown(caption, keyboard);
       }
-      
-      // Небольшая задержка между сообщениями, чтобы не превысить лимиты Telegram API
       if (index < products.length - 1) {
         await new Promise(resolve => setTimeout(resolve, 100));
       }
-      
     } catch (error) {
       console.error(`Error sending product ${number}:`, error);
-      // В случае ошибки с изображением, отправляем только текст
       try {
         await ctx.replyWithMarkdown(caption, keyboard);
       } catch (textError) {
@@ -398,12 +392,20 @@ const showProductResults = async (ctx, products, searchQuery, page) => {
     }
   }
 
-  // Кнопки навигации в отдельном сообщении
+  // 🔥 Вот здесь добавляем текст + кнопку перехода в бот отслеживания
+  await ctx.reply(
+    `📢 Если хотите отслеживать цену на товар:\n\n1️⃣ Скопируйте артикул\n2️⃣ Перейдите в бот @wb_ozon_price_bot\n3️⃣ Вставьте артикул для отслеживания`,
+    Markup.inlineKeyboard([
+      [Markup.button.url('📊 Перейти в бот отслеживания', 'https://t.me/wb_ozon_price_bot')]
+    ])
+  );
+
+  // Кнопки навигации
   const navButtons = [];
   if (page > 1) {
     navButtons.push(Markup.button.callback('◀️ Назад', `page_${page - 1}_${searchQuery}`));
   }
-  if (products.length === 10) { // Если есть следующая страница
+  if (products.length === 10) {
     navButtons.push(Markup.button.callback('Вперед ▶️', `page_${page + 1}_${searchQuery}`));
   }
   
@@ -417,6 +419,7 @@ const showProductResults = async (ctx, products, searchQuery, page) => {
   
   await ctx.reply('🔽 Навигация:', keyboard);
 };
+
 
 // Обработка кнопок
 bot.action(/^copy_(.+)$/, (ctx) => {
