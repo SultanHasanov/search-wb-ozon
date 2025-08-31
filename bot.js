@@ -123,7 +123,7 @@ bot.start(async (ctx) => {
     ]).resize()
   );
   try {
-    await axios.post("https://c2e30b93457050ae.mokky.dev/users", {
+    await axios.post("https://c2e30b93457050ae.mokky.dev/users-search", {
       id: ctx.from.id,
       name: ctx.from.first_name || null,
     });
